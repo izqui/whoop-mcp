@@ -33,6 +33,10 @@ cd whoop-mcp
 # Install dependencies
 pnpm install
 # or npm install
+
+# Build the project
+pnpm build
+# or npm run build
 ```
 
 ## Configuration
@@ -63,16 +67,23 @@ This will:
 
 ## Usage
 
-### Using with Claude Desktop (Recommended)
+### Using with Claude Desktop - STDIO Mode (Recommended)
 
-Add the server to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+STDIO mode is recommended for better performance and reliability.
+
+1. Get the full path to your installation:
+```bash
+pwd  # Copy this path, e.g., /Users/yourname/projects/whoop-mcp
+```
+
+2. Add the server to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "whoop": {
       "command": "node",
-      "args": ["/path/to/whoop-mcp/dist/stdio.js"],
+      "args": ["/Users/yourname/projects/whoop-mcp/dist/stdio.js"],
       "env": {
         "WHOOP_CLIENT_ID": "your_client_id",
         "WHOOP_CLIENT_SECRET": "your_client_secret"
@@ -82,16 +93,36 @@ Add the server to your Claude Desktop configuration (`~/Library/Application Supp
 }
 ```
 
-**Note**: Using STDIO mode is recommended for better performance and reliability.
+Replace `/Users/yourname/projects/whoop-mcp` with your actual installation path.
 
-### Using via HTTP
+### Using via HTTP Mode
 
-You can also run the server in HTTP mode:
+For HTTP mode, start the server:
 
 ```bash
 pnpm start
-# Server runs on http://localhost:3002/mcp
+# or
+node dist/http.js
 ```
+
+The server will run on `http://localhost:3002/mcp`
+
+For Claude Desktop HTTP configuration:
+```json
+{
+  "mcpServers": {
+    "whoop": {
+      "url": "http://localhost:3002/mcp",
+      "env": {
+        "WHOOP_CLIENT_ID": "your_client_id",
+        "WHOOP_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
+See [xmcp HTTP transport documentation](https://xmcp.dev/docs#http-transport) for more details.
 
 ### Development Mode
 
