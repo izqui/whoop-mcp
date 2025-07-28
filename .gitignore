@@ -11,6 +11,7 @@ xmcp-env.d.ts
 
 # Auth tokens
 .whoop-tokens.json
+.whoop-mcp/
 
 # OS/Editor
 .DS_Store

@@ -5,19 +5,24 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import os from 'os';
 
 dotenv.config();
+
+// Use the same token file location as the main app
+const getTokenFilePath = () => {
+  if (process.env.WHOOP_TOKEN_FILE) {
+    return process.env.WHOOP_TOKEN_FILE;
+  }
+  const configDir = path.join(os.homedir(), '.whoop-mcp');
+  return path.join(configDir, 'tokens.json');
+};
 
 const WHOOP_API_HOSTNAME = 'https://api.prod.whoop.com';
 const CLIENT_ID = process.env.WHOOP_CLIENT_ID;
 const CLIENT_SECRET = process.env.WHOOP_CLIENT_SECRET;
 const CALLBACK_URL = 'http://localhost:3000/auth/whoop/callback';
-const TOKEN_FILE = path.join(__dirname, '..', '.whoop-tokens.json');
+const TOKEN_FILE = getTokenFilePath();
 
 if (!CLIENT_ID || !CLIENT_SECRET) {
   console.error('Error: WHOOP_CLIENT_ID and WHOOP_CLIENT_SECRET must be set in .env file');
@@ -44,6 +49,10 @@ const whoopOAuthConfig = {
 };
 
 const saveTokens = async (tokenData: TokenData) => {
+  // Ensure directory exists
+  const dir = path.dirname(TOKEN_FILE);
+  await fs.mkdir(dir, { recursive: true });
+  
   await fs.writeFile(TOKEN_FILE, JSON.stringify(tokenData, null, 2));
   console.log(`\nTokens saved to ${TOKEN_FILE}`);
 };

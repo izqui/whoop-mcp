@@ -1,15 +1,23 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import os from 'os';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Use a consistent location for tokens regardless of where the script is run from
+const getTokenFilePath = () => {
+  // First, check if a custom path is set via environment variable
+  if (process.env.WHOOP_TOKEN_FILE) {
+    return process.env.WHOOP_TOKEN_FILE;
+  }
+  
+  // Otherwise, use a consistent location in the user's home directory
+  const configDir = path.join(os.homedir(), '.whoop-mcp');
+  return path.join(configDir, 'tokens.json');
+};
 
-const TOKEN_FILE = path.join(__dirname, '..', '..', '.whoop-tokens.json');
+const TOKEN_FILE = getTokenFilePath();
 const WHOOP_API_HOSTNAME = 'https://api.prod.whoop.com';
 const CLIENT_ID = process.env.WHOOP_CLIENT_ID;
 const CLIENT_SECRET = process.env.WHOOP_CLIENT_SECRET;
@@ -37,6 +45,10 @@ export class TokenValidator {
   }
 
   static async saveTokens(tokenData: TokenData): Promise<void> {
+    // Ensure directory exists
+    const dir = path.dirname(TOKEN_FILE);
+    await fs.mkdir(dir, { recursive: true });
+    
     await fs.writeFile(TOKEN_FILE, JSON.stringify(tokenData, null, 2));
     this.tokenData = tokenData;
   }

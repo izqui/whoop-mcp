@@ -196,7 +196,8 @@ whoop-mcp/
 
 ## Token Management
 
-- Tokens are stored in `.whoop-tokens.json` (git-ignored)
+- Tokens are stored in `~/.whoop-mcp/tokens.json` by default
+- You can override the location with `WHOOP_TOKEN_FILE` environment variable
 - Access tokens expire after 1 hour
 - Refresh tokens are automatically used to obtain new access tokens
 - Run `pnpm refresh-token` to manually refresh tokens
@@ -232,9 +233,11 @@ pnpm refresh-token
 
 ## Security Notes
 
-- Never commit `.env` or `.whoop-tokens.json`
+- Never commit `.env` or token files
 - Keep your Client Secret secure
-- Tokens are stored locally and never transmitted except to WHOOP
+- Tokens are stored in your home directory (`~/.whoop-mcp/`) by default
+- Tokens are never transmitted except to WHOOP
+- Use `WHOOP_TOKEN_FILE` environment variable to store tokens in a custom location if needed
 
 ## Contributing
 
