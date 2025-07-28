@@ -83,11 +83,7 @@ pwd  # Copy this path, e.g., /Users/yourname/projects/whoop-mcp
   "mcpServers": {
     "whoop": {
       "command": "node",
-      "args": ["/Users/yourname/projects/whoop-mcp/dist/stdio.js"],
-      "env": {
-        "WHOOP_CLIENT_ID": "your_client_id",
-        "WHOOP_CLIENT_SECRET": "your_client_secret"
-      }
+      "args": ["/Users/yourname/projects/whoop-mcp/dist/stdio.js"]
     }
   }
 }
@@ -112,11 +108,7 @@ For Claude Desktop HTTP configuration:
 {
   "mcpServers": {
     "whoop": {
-      "url": "http://localhost:3002/mcp",
-      "env": {
-        "WHOOP_CLIENT_ID": "your_client_id",
-        "WHOOP_CLIENT_SECRET": "your_client_secret"
-      }
+      "url": "http://localhost:3002/mcp"
     }
   }
 }
