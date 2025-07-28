@@ -1,0 +1,46 @@
+{
+  "name": "whoop-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for WHOOP API integration",
+  "author": "Jorge Izquierdo <jorge@izqui.me>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/whoop-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "whoop",
+    "api",
+    "health",
+    "fitness",
+    "model-context-protocol"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start": "node dist/http.js",
+    "auth": "tsx scripts/auth.ts",
+    "refresh-token": "tsx scripts/refresh-token.ts"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "passport": "^0.7.0",
+    "passport-oauth2": "^1.8.0",
+    "xmcp": "latest",
+    "zod": "3.24.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-oauth2": "^1.8.0",
+    "swc-loader": "^0.2.6",
+    "tsx": "^4.20.3"
+  }
+}
