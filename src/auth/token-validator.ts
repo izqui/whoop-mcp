@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true});
 
 // Use a consistent location for tokens regardless of where the script is run from
 const getTokenFilePath = () => {
@@ -96,7 +96,6 @@ export class TokenValidator {
       };
 
       await this.saveTokens(updatedTokenData);
-      console.log('Token refreshed successfully');
       return true;
     } catch (error) {
       console.error('Error refreshing token:', error);
@@ -116,7 +115,6 @@ export class TokenValidator {
     // Check if token is expired or will expire in the next 5 minutes
     const expiryBuffer = 5 * 60 * 1000; // 5 minutes
     if (Date.now() >= this.tokenData.expiresAt - expiryBuffer) {
-      console.log('Token expired or expiring soon, attempting to refresh...');
       const refreshed = await this.refreshAccessToken();
       if (!refreshed) {
         console.error('Failed to refresh token. Please run "pnpm auth" to re-authenticate.');
