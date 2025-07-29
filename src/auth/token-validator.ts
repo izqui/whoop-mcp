@@ -104,10 +104,9 @@ export class TokenValidator {
   }
 
   static async getValidToken(): Promise<string | null> {
-    if (!this.tokenData) {
-      await this.loadTokens();
-    }
-
+    // Always reload from disk to ensure fresh data
+    await this.loadTokens();
+    
     if (!this.tokenData) {
       return null;
     }
@@ -120,6 +119,8 @@ export class TokenValidator {
         console.error('Failed to refresh token. Please run "pnpm auth" to re-authenticate.');
         return null;
       }
+      // Reload after refresh to get the updated token
+      await this.loadTokens();
     }
 
     return this.tokenData.accessToken;
