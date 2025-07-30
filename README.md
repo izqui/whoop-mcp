@@ -83,7 +83,11 @@ pwd  # Copy this path, e.g., /Users/yourname/projects/whoop-mcp
   "mcpServers": {
     "whoop": {
       "command": "node",
-      "args": ["/Users/yourname/projects/whoop-mcp/dist/stdio.js"]
+      "args": ["/Users/yourname/projects/whoop-mcp/dist/stdio.js"],
+      "env": {
+        "WHOOP_CLIENT_ID": "your-client-id",
+        "WHOOP_CLIENT_SECRET": "your-client-secret"
+      }
     }
   }
 }
@@ -113,6 +117,8 @@ For Claude Desktop HTTP configuration:
   }
 }
 ```
+
+**Important**: When using STDIO mode with Claude Desktop, you MUST include the `env` section with your WHOOP credentials, as shown above. The server cannot read your `.env` file when launched by Claude Desktop.
 
 See [xmcp HTTP transport documentation](https://xmcp.dev/docs#http-transport) for more details.
 

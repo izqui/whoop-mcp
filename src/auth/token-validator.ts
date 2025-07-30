@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import dotenv from 'dotenv';
 
-dotenv.config({ quiet: true});
+dotenv.config({ quiet: true });
 
 // Use a consistent location for tokens regardless of where the script is run from
 const getTokenFilePath = () => {
@@ -19,8 +19,6 @@ const getTokenFilePath = () => {
 
 const TOKEN_FILE = getTokenFilePath();
 const WHOOP_API_HOSTNAME = 'https://api.prod.whoop.com';
-const CLIENT_ID = process.env.WHOOP_CLIENT_ID;
-const CLIENT_SECRET = process.env.WHOOP_CLIENT_SECRET;
 
 export interface TokenData {
   accessToken: string;
@@ -54,13 +52,24 @@ export class TokenValidator {
   }
 
   static async refreshAccessToken(): Promise<boolean> {
+    console.log('Starting token refresh...');
+    
     if (!this.tokenData?.refreshToken) {
       console.error('No refresh token available');
       return false;
     }
 
+    // Get credentials at runtime to ensure they're loaded
+    const CLIENT_ID = process.env.WHOOP_CLIENT_ID;
+    const CLIENT_SECRET = process.env.WHOOP_CLIENT_SECRET;
+    
     if (!CLIENT_ID || !CLIENT_SECRET) {
-      console.error('WHOOP_CLIENT_ID and WHOOP_CLIENT_SECRET must be set in .env file');
+      console.error('WHOOP_CLIENT_ID and WHOOP_CLIENT_SECRET must be set in .env file or environment');
+      console.error('Environment check:', {
+        CLIENT_ID_exists: !!CLIENT_ID,
+        CLIENT_SECRET_exists: !!CLIENT_SECRET,
+        env_keys: Object.keys(process.env).filter(k => k.includes('WHOOP'))
+      });
       return false;
     }
 
@@ -81,8 +90,13 @@ export class TokenValidator {
       });
 
       if (!response.ok) {
-        const error = await response.text();
-        console.error('Failed to refresh token:', error);
+        const errorText = await response.text();
+        console.error('Failed to refresh token:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+          tokenFile: TOKEN_FILE
+        });
         return false;
       }
 
@@ -96,6 +110,7 @@ export class TokenValidator {
       };
 
       await this.saveTokens(updatedTokenData);
+      console.log('Token refreshed successfully. New expiry:', new Date(updatedTokenData.expiresAt).toISOString());
       return true;
     } catch (error) {
       console.error('Error refreshing token:', error);
