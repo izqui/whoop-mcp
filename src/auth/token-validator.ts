@@ -52,8 +52,6 @@ export class TokenValidator {
   }
 
   static async refreshAccessToken(): Promise<boolean> {
-    console.log('Starting token refresh...');
-    
     if (!this.tokenData?.refreshToken) {
       console.error('No refresh token available');
       return false;
@@ -110,7 +108,6 @@ export class TokenValidator {
       };
 
       await this.saveTokens(updatedTokenData);
-      console.log('Token refreshed successfully. New expiry:', new Date(updatedTokenData.expiresAt).toISOString());
       return true;
     } catch (error) {
       console.error('Error refreshing token:', error);
