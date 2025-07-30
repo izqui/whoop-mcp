@@ -38,6 +38,7 @@ export class TokenValidator {
       this.tokenData = JSON.parse(data);
       return this.tokenData;
     } catch (error) {
+      console.error('Error loading tokens from disk:', TOKEN_FILE, error);
       return null;
     }
   }
