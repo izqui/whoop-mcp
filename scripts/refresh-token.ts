@@ -1,20 +1,14 @@
 import { TokenValidator } from '../src/auth/index.js';
 import dotenv from 'dotenv';
 import path from 'path';
-import os from 'os';
 
-dotenv.config();
+// Load .env file explicitly from project root
+const projectRoot = path.resolve(__dirname, '..');
+const envPath = path.join(projectRoot, '.env');
+dotenv.config({ path: envPath });
 
-// Show token file location for debugging
-const getTokenFilePath = () => {
-  if (process.env.WHOOP_TOKEN_FILE) {
-    return process.env.WHOOP_TOKEN_FILE;
-  }
-  const configDir = path.join(os.homedir(), '.whoop-mcp');
-  return path.join(configDir, 'tokens.json');
-};
-
-console.log('Token file location:', getTokenFilePath());
+const TOKEN_FILE = path.join(projectRoot, '.whoop-tokens.json');
+console.log('Token file location:', TOKEN_FILE);
 
 async function refreshToken() {
   console.log('Loading current tokens...');

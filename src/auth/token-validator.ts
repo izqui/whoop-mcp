@@ -1,23 +1,14 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import os from 'os';
 import dotenv from 'dotenv';
 
-dotenv.config({ quiet: true });
+// Load .env file explicitly from project root
+const projectRoot = path.resolve(__dirname, '..');
+const envPath = path.join(projectRoot, '.env');
+dotenv.config({ path: envPath, quiet: true });
 
-// Use a consistent location for tokens regardless of where the script is run from
-const getTokenFilePath = () => {
-  // First, check if a custom path is set via environment variable
-  if (process.env.WHOOP_TOKEN_FILE) {
-    return process.env.WHOOP_TOKEN_FILE;
-  }
-  
-  // Otherwise, use a consistent location in the user's home directory
-  const configDir = path.join(os.homedir(), '.whoop-mcp');
-  return path.join(configDir, 'tokens.json');
-};
-
-const TOKEN_FILE = getTokenFilePath();
+// Use a fixed token file in the project root
+const TOKEN_FILE = path.join(projectRoot, '.whoop-tokens.json');
 const WHOOP_API_HOSTNAME = 'https://api.prod.whoop.com';
 
 export interface TokenData {
